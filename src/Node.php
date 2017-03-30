@@ -2,15 +2,14 @@
 
 namespace FSth\Picker;
 
-use anlutro\cURL\cURL;
-
-class Registor
+class Node
 {
     protected $requestUrl = "%s/v1/nodes/%s/%s";
 
     protected $url;
     protected $server;
     protected $idc;
+    protected $curl;
 
     public function __construct($url, $server, $idc)
     {
@@ -19,11 +18,15 @@ class Registor
         $this->idc = $idc;
     }
 
+    public function setCurl($curl)
+    {
+        $this->curl = $curl;
+    }
+
     public function request()
     {
         $url = sprintf($this->requestUrl, $this->url, $this->idc, $this->server);
-        $curl = new cURL();
-        $response = $curl->get($url);
-        return json_decode($response->body, true);
+        $response = $this->curl->get($url);
+        return $response;
     }
 }

@@ -12,8 +12,17 @@ class TestPicker extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->picker = new \FSth\Picker\Picker();
-        $registor = new \FSth\Picker\Registor($this->url, $this->server, $this->idc);
-        $this->picker->setMiddleWare($registor);
+        $node = new \FSth\Picker\Node($this->url, $this->server, $this->idc);
+
+        $response = new stdClass();
+        $response->body = ['hehe'];
+        $curl = Mockery::mock('cURL');
+        $curl->shouldReceive('get')
+            ->withAnyArgs()
+            ->andReturn($response);
+
+        $node->setCurl($curl);
+        $this->picker->setMiddleWare($node);
     }
 
     public function testRequest()
