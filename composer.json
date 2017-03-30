@@ -1,0 +1,19 @@
+{
+  "name": "fsth/picker",
+  "description": "",
+  "autoload": {
+    "psr-4": {
+      "FSth\\Picker\\": "src"
+    }
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "qiqisan",
+      "email": "qiqisan1@126.com"
+    }
+  ],
+  "require": {
+    "anlutro/curl": "^1.4.2"
+  }
+}
