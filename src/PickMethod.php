@@ -4,15 +4,12 @@ namespace FSth\Picker;
 
 class PickMethod
 {
-    public static function random($result, $column)
+    public static function random($result)
     {
         if (empty($result) || !is_array($result)) {
-            return '';
+            return [];
         }
         $rand = rand(0, count($result) - 1);
-        if (empty($result[$rand]) || empty($result[$rand][$column])) {
-            return '';
-        }
-        return $result[$rand][$column];
+        return $result[$rand];
     }
 }
