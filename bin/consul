@@ -1,7 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+$autoloader = require dirname(__DIR__)."/src/Autoload.php";
+
+if (!$autoloader()) {
+    die('class autoloader not found.');
+}
 
 if ($argc != 2) {
     echo sprintf("usage: %s the-path-to-kv-config\n", $argv[0]);
