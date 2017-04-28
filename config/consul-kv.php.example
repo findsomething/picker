@@ -1,0 +1,21 @@
+<?php
+
+return [
+    'consul' => [
+        'url' => 'http://127.0.0.1:8500'
+    ],
+    'kv' => [
+        [
+            'id' => 'logicHttpRpc',
+            'data' => [
+                'type' => 'http',
+                'idc' => 'local',
+                'url' => 'http://127.0.0.1:9507/',
+                'outUrl' => 'http://127.0.0.1:9507/',
+                'host' => '127.0.0.1',
+                'outHost' => '127.0.0.1',
+                'port' => '9507'
+            ]
+        ]
+    ]
+];

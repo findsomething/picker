@@ -14,8 +14,13 @@
     }
   ],
   "require": {
+    "sensiolabs/consul-php-sdk": "v2.1.0"
   },
   "require-dev": {
     "mockery/mockery": "v0.9.7"
-  }
+  },
+  "config": {
+    "bin-dir": "bin"
+  },
+  "bin": ["bin/consul"]
 }

@@ -1,0 +1,13 @@
+{
+  "services": [
+    {
+      "id": "logicHttpRpc",
+      "name": "logicHttpRpc",
+      "tags": [
+        "local"
+      ],
+      "address": "127.0.0.1",
+      "port": 9507
+    }
+  ]
+}
