@@ -14,24 +14,31 @@ class Consul extends BaseNode
 
     public function __construct($url, $server, $idc)
     {
+        $this->url = $url;
+        $this->server = $server;
+        $this->idc = $idc;
+
         $this->sf = new ServiceFactory([
-            'base_uri' => $url
+            'base_uri' => $this->url,
         ]);
 
         $this->kv = $this->sf->get('kv');
 
         $this->health = $this->sf->get('health');
-
-        $this->url = $url;
-        $this->server = $server;
-        $this->idc = $idc;
-
     }
 
     public function request()
     {
         $services = $this->health->service($this->server);
+
         return $this->health($services->json());
+    }
+
+    public function clear()
+    {
+        unset($this->sf);
+        unset($this->health);
+        unset($this->kv);
     }
 
     public function transport($node)
