@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1f79a1fd66239b868cb3871123c22dbe",
-    "content-hash": "671d14fbfc8757b0a822fb7c4e0d7e5b",
+    "hash": "7459ae2ea51e9defc2b477fd49350915",
+    "content-hash": "0edc7473ca1f0ac33e70ffd7b510b75e",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -376,7 +376,7 @@
             "version": "0.9.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/padraic/mockery.git",
+                "url": "https://github.com/mockery/mockery.git",
                 "reference": "4de7969f4664da3cef1ccd83866c9f59378c3371"
             },
             "dist": {
