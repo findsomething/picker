@@ -12,11 +12,6 @@ abstract class BaseNode
 
     abstract protected function transport($node);
 
-    public function clear()
-    {
-        
-    }
-
     protected function getValue(array $array, $index, $default = '')
     {
         return !empty($array[$index]) ? $array[$index] : $default;

@@ -17,34 +17,24 @@ class Consul extends BaseNode
         $this->url = $url;
         $this->server = $server;
         $this->idc = $idc;
-
-        $this->sf = new ServiceFactory([
-            'base_uri' => $this->url,
-        ]);
-
-        $this->kv = $this->sf->get('kv');
-
-        $this->health = $this->sf->get('health');
     }
 
     public function request()
     {
+        $this->init();
+
         $services = $this->health->service($this->server);
+        $result = $this->health($services->json());
 
-        return $this->health($services->json());
-    }
-
-    public function clear()
-    {
-        unset($this->sf);
-        unset($this->health);
-        unset($this->kv);
+        $this->clear();
+        
+        return $result;
     }
 
     public function transport($node)
     {
-        $nodeKey = sprintf(self::NODE_CONTENT,  $node['Service']['ID']);
-        $nodeContent = json_decode($this->kv->get($nodeKey, ['raw' => true])->getBody(),true);
+        $nodeKey = sprintf(self::NODE_CONTENT, $node['Service']['ID']);
+        $nodeContent = json_decode($this->kv->get($nodeKey, ['raw' => true])->getBody(), true);
         // TODO: Implement transport() method.
         return [
             'server' => $this->server,
@@ -56,5 +46,23 @@ class Consul extends BaseNode
             'port' => $node['Service']['Port'],
             'status' => ($node['Checks'][0]['Status'] == 'passing') ? 'health' : 'unHealth'
         ];
+    }
+
+    protected function clear()
+    {
+        unset($this->sf);
+        unset($this->health);
+        unset($this->kv);
+    }
+
+    protected function init()
+    {
+        $this->sf = new ServiceFactory([
+            'base_uri' => $this->url,
+        ]);
+
+        $this->kv = $this->sf->get('kv');
+
+        $this->health = $this->sf->get('health');
     }
 }
