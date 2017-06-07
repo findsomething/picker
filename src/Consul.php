@@ -27,12 +27,16 @@ class Consul extends BaseNode
         $result = $this->health($services->json());
 
         $this->clear();
-        
+
         return $result;
     }
 
     public function transport($node)
     {
+        $check = count($node['Checks']) > 1 ? $node['Checks'][1] : $node['Checks'][0];
+        if($check['Status'] != 'passing'){
+            return [];
+        }
         $nodeKey = sprintf(self::NODE_CONTENT, $node['Service']['ID']);
         $nodeContent = json_decode($this->kv->get($nodeKey, ['raw' => true])->getBody(), true);
         // TODO: Implement transport() method.
@@ -44,7 +48,7 @@ class Consul extends BaseNode
             'host' => $this->getValue($nodeContent, 'host'),
             'outHost' => $this->getValue($nodeContent, 'outHost'),
             'port' => $node['Service']['Port'],
-            'status' => ($node['Checks'][0]['Status'] == 'passing') ? 'health' : 'unHealth'
+            'status' => ($check['Status'] == 'passing') ? 'health' : 'unHealth'
         ];
     }
 

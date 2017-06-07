@@ -31,7 +31,7 @@ abstract class BaseNode
         $transportNodes = [];
         foreach ($nodes as $key => $node) {
             $transportNode = $this->transport($node);
-            if ($this->isHealth($transportNode)) {
+            if (!empty($transportNode) && $this->isHealth($transportNode)) {
                 $transportNodes[] = $this->transport($node);
             }
         }
