@@ -19,11 +19,16 @@ class Consul extends BaseNode
         $this->idc = $idc;
     }
 
+    public function setIdc($idc)
+    {
+        $this->idc = $idc;
+    }
+
     public function request()
     {
         $this->init();
 
-        $services = $this->health->service($this->server);
+        $services = $this->health->service($this->server, ['dc' => $this->idc]);
         $result = $this->health($services->json());
 
         $this->clear();
@@ -34,11 +39,11 @@ class Consul extends BaseNode
     public function transport($node)
     {
         $check = count($node['Checks']) > 1 ? $node['Checks'][1] : $node['Checks'][0];
-        if($check['Status'] != 'passing'){
+        if ($check['Status'] != 'passing') {
             return [];
         }
         $nodeKey = sprintf(self::NODE_CONTENT, $node['Service']['ID']);
-        $nodeContent = json_decode($this->kv->get($nodeKey, ['raw' => true])->getBody(), true);
+        $nodeContent = json_decode($this->kv->get($nodeKey, ['raw' => true, 'dc' => $this->idc])->getBody(), true);
         // TODO: Implement transport() method.
         return [
             'server' => $this->server,
