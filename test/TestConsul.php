@@ -6,7 +6,7 @@ class TestConsul extends PHPUnit_Framework_TestCase
 
     private $url = '127.0.0.1:8500';
     private $server = 'liveHttp';
-    private $idc = 'dc1';
+    private $idc = null;
 
     public function setUp()
     {

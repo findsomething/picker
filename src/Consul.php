@@ -8,11 +8,11 @@ class Consul extends BaseNode
 {
     const NODE_CONTENT = 'nodes/%s/content';
 
-    private $sf;
-    private $kv;
-    private $health;
+    protected $sf;
+    protected $kv;
+    protected $health;
 
-    public function __construct($url, $server, $idc)
+    public function __construct($url, $server, $idc = null)
     {
         $this->url = $url;
         $this->server = $server;
@@ -28,7 +28,7 @@ class Consul extends BaseNode
     {
         $this->init();
 
-        $services = $this->health->service($this->server, ['dc' => $this->idc]);
+        $services = $this->health->service($this->server, $this->getIdcSetting());
         $result = $this->health($services->json());
 
         $this->clear();
@@ -43,7 +43,8 @@ class Consul extends BaseNode
             return [];
         }
         $nodeKey = sprintf(self::NODE_CONTENT, $node['Service']['ID']);
-        $nodeContent = json_decode($this->kv->get($nodeKey, ['raw' => true, 'dc' => $this->idc])->getBody(), true);
+        $nodeContent = json_decode($this->kv->get($nodeKey,
+            array_merge(['raw' => true], $this->getIdcSetting()))->getBody(), true);
         // TODO: Implement transport() method.
         return [
             'server' => $this->server,
@@ -55,6 +56,11 @@ class Consul extends BaseNode
             'port' => $node['Service']['Port'],
             'status' => ($check['Status'] == 'passing') ? 'health' : 'unHealth'
         ];
+    }
+
+    protected function getIdcSetting()
+    {
+        return !empty($this->idc) ? ['dc' => $this->idc] : [];
     }
 
     protected function clear()
@@ -74,4 +80,5 @@ class Consul extends BaseNode
 
         $this->health = $this->sf->get('health');
     }
+
 }
