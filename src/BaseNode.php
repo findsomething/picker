@@ -7,10 +7,27 @@ abstract class BaseNode
     protected $url;
     protected $server;
     protected $idc;
+    protected $tplKeys;
+
+    public function __construct($url, $server, $idc = null)
+    {
+        $this->url = $url;
+        $this->server = $server;
+        $this->idc = $idc;
+
+        $this->tplKeys = [
+            'idc', 'url', 'outUrl', 'host', 'outHost'
+        ];
+    }
+
+    public function setTplKeys(array $tplKeys)
+    {
+        $this->tplKeys = array_merge($tplKeys, $this->tplKeys);
+    }
 
     abstract public function request();
 
-    abstract protected function transport($node);
+    abstract protected function translate($node);
 
     protected function getValue(array $array, $index, $default = '')
     {
@@ -30,9 +47,9 @@ abstract class BaseNode
         }
         $transportNodes = [];
         foreach ($nodes as $key => $node) {
-            $transportNode = $this->transport($node);
+            $transportNode = $this->translate($node);
             if (!empty($transportNode) && $this->isHealth($transportNode)) {
-                $transportNodes[] = $this->transport($node);
+                $transportNodes[] = $transportNode;
             }
         }
         return $transportNodes;

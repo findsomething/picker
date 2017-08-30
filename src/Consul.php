@@ -12,13 +12,6 @@ class Consul extends BaseNode
     protected $kv;
     protected $health;
 
-    public function __construct($url, $server, $idc = null)
-    {
-        $this->url = $url;
-        $this->server = $server;
-        $this->idc = $idc;
-    }
-
     public function setIdc($idc)
     {
         $this->idc = $idc;
@@ -36,7 +29,7 @@ class Consul extends BaseNode
         return $result;
     }
 
-    public function transport($node)
+    public function translate($node)
     {
         $check = count($node['Checks']) > 1 ? $node['Checks'][1] : $node['Checks'][0];
         if ($check['Status'] != 'passing') {
@@ -45,17 +38,20 @@ class Consul extends BaseNode
         $nodeKey = sprintf(self::NODE_CONTENT, $node['Service']['ID']);
         $nodeContent = json_decode($this->kv->get($nodeKey,
             array_merge(['raw' => true], $this->getIdcSetting()))->getBody(), true);
-        // TODO: Implement transport() method.
-        return [
+        $status = ($check['Status'] == 'passing') ? 'health' : 'unHealth';
+        return $this->getTranslate($nodeContent, $status);
+    }
+
+    protected function getTranslate($nodeContent, $status = 'health')
+    {
+        $result = [
             'server' => $this->server,
-            'idc' => $this->getValue($nodeContent, 'idc'),
-            'url' => $this->getValue($nodeContent, 'url'),
-            'outUrl' => $this->getValue($nodeContent, 'outUrl'),
-            'host' => $this->getValue($nodeContent, 'host'),
-            'outHost' => $this->getValue($nodeContent, 'outHost'),
-            'port' => $node['Service']['Port'],
-            'status' => ($check['Status'] == 'passing') ? 'health' : 'unHealth'
+            'status' => $status
         ];
+        foreach ($this->tplKeys as $key) {
+            $result[$key] = $this->getValue($nodeContent, $key);
+        }
+        return $result;
     }
 
     protected function getIdcSetting()

@@ -13,6 +13,7 @@ class TestConsul extends PHPUnit_Framework_TestCase
         parent::setUp();
         $this->picker = new \FSth\Picker\Picker();
         $node = new \FSth\Picker\Consul($this->url, $this->server, $this->idc);
+        $node->setTplKeys(['sslUrl']);
         $this->picker->setMiddleWare($node);
     }
 

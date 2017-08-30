@@ -8,13 +8,6 @@ class Node extends BaseNode
 
     protected $curl;
 
-    public function __construct($url, $server, $idc)
-    {
-        $this->url = $url;
-        $this->server = $server;
-        $this->idc = $idc;
-    }
-
     public function setCurl($curl)
     {
         $this->curl = $curl;
@@ -27,19 +20,21 @@ class Node extends BaseNode
         return $this->health(json_decode($response->body, true));
     }
 
-    public function transport($node)
+    public function translate($node)
     {
-        // TODO: Implement transport() method.
-        return [
+        // TODO: Implement translate() method.
+        return $this->getTranslate($node);
+    }
+
+    protected function getTranslate($nodeContent, $status = 'health')
+    {
+        $result = [
             'server' => $this->server,
-            'idc' => $this->getValue($node, 'Idc'),
-            'type' => $this->getValue($node, 'Type'),
-            'url' => $this->getValue($node, 'Url'),
-            'outUrl' => $this->getValue($node, 'OutUrl'),
-            'host' => $this->getValue($node, 'Host'),
-            'outHost' => $this->getValue($node, 'OutHost'),
-            'port' => $this->getValue($node, 'Port'),
-            'status' => $this->getValue($node, 'Status')
+            'status' => $this->getValue($nodeContent, 'Status')
         ];
+        foreach ($this->tplKeys as $key) {
+            $result[$key] = $this->getValue($nodeContent, ucfirst($key));
+        }
+        return $result;
     }
 }
