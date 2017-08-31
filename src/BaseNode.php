@@ -16,7 +16,7 @@ abstract class BaseNode
         $this->idc = $idc;
 
         $this->tplKeys = [
-            'idc', 'url', 'outUrl', 'host', 'outHost'
+            'idc', 'url', 'outUrl', 'host', 'outHost', 'port'
         ];
     }
 
